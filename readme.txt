@@ -1,1 +1,1 @@
-Help
+I think that one of the best approaches to this 3 week project would probably to be approaching it by reusing a lot of the reusable code we have gotten from this semester's assignments. I will therefore be uploading some of the most generic files . Also please do post songs to the readme :P
