@@ -40,6 +40,7 @@ Rock.prototype = new Entity();
 
 Rock.prototype.randomisePosition = function () {
     // Rock randomisation defaults (if nothing otherwise specified)
+
     var MIN_SPAWN_Y = g_canvas.height/ 2,
         MAX_SPAWN_Y = MIN_SPAWN_Y+g_canvas.height/3;
 
@@ -55,7 +56,13 @@ Rock.prototype.randomiseVelocity = function () {
     var speed = util.randRange(MIN_SPEED, MAX_SPEED) / SECS_TO_NOMINALS;
 
 
-    var dirn = Math.random() * consts.FULL_CIRCLE;
+    var dirn;
+    if(this.cx < 0){
+        dirn = 3*Math.PI/2+Math.PI/4;
+    }else{
+       dirn = 3*Math.PI/2-Math.PI/4;
+    }
+
 
     this.velX = this.velX || speed * Math.cos(dirn);
     this.velY = this.velY || speed * Math.sin(dirn);
