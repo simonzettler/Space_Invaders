@@ -85,6 +85,4 @@ var spatialManager = {
         ctx.strokeStyle = oldStyle;
     }
 
-}/**
- * Created by Nökkvi on 31.10.2015.
- */
+}

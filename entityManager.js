@@ -47,7 +47,7 @@ var entityManager = {
     _findNearestShip : function(posX, posY) {
         var closestShip = null,
             closestIndex = -1,
-            closestSq = 1000 * 1000;
+            closestSq = Number.POSITIVE_INFINITY;
 
         for (var i = 0; i < this._ships.length; ++i) {
 
