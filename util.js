@@ -33,8 +33,8 @@ wrapRange: function(value, lowBound, highBound) {
 
 isBetween: function(value, lowBound, highBound) {
     if (value < lowBound) { return false; }
-    if (value > highBound) { return false; }
-    return true;
+    return value <= highBound;
+
 },
 
 
@@ -43,6 +43,10 @@ isBetween: function(value, lowBound, highBound) {
 
 randRange: function(min, max) {
     return (min + Math.random() * (max - min));
+},
+
+rand: function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 },
 
 
@@ -66,7 +70,7 @@ wrappedDistSq: function(x1, y1, x2, y2, xWrap, yWrap) {
 	dy = Math.abs(y2-y1);
     if (dx > xWrap/2) {
 	dx = xWrap - dx;
-    };
+    }
     if (dy > yWrap/2) {
 	dy = yWrap - dy;
     }

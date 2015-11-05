@@ -30,7 +30,7 @@ function Entity() {
     console.dir(this);
 */
 
-};
+}
 
 Entity.prototype.setup = function (descr) {
 
@@ -78,6 +78,17 @@ Entity.prototype.findHitEntity = function () {
 Entity.prototype.isColliding = function () {
     return this.findHitEntity();
 };
+
+Entity.prototype.collidesWithLeftWall = function () {
+    if (this.cx<0){
+        return true;
+    }
+};
+
+Entity.prototype.collidesWithRightWall = function () {
+    return (this.cx>g_canvas.width)
+};
+
 
 Entity.prototype.wrapPosition = function () {
     this.cx = util.wrapRange(this.cx, 0, g_canvas.width);

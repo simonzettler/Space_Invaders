@@ -27,24 +27,48 @@ var entityManager = {
 
 // "PRIVATE" DATA
 
-    _rocks   : [],
-    _bullets : [],
-    _ships   : [],
+    _rocks: [],
+    _bullets: [],
+    _ships: [],
+    _enemies: [],
 
-    _bShowRocks : true,
+    _bShowRocks: true,
 
 // "PRIVATE" METHODS
+    /*
+     _generateRocks : function() {
+     var i,
+     NUM_ROCKS = 4;
 
-    _generateRocks : function() {
-        var i,
-            NUM_ROCKS = 4;
+     for (i = 0; i < NUM_ROCKS; ++i) {
+     this.generateRock();
+     }
+     },
+     */
+    _generateEnemiesBlock: function () {
+        //Wall.prototype.width = g_canvas.width;
+        //Wall.prototype.height = g_canvas.height/4;
+        var ENEMIES_X = 5;
+        var ENEMIES_Y = 3;
+        var distance =g_canvas.width/ENEMIES_X+2;
+        var x=distance/2;
+        var y=distance/2;
 
-        for (i = 0; i < NUM_ROCKS; ++i) {
-            this.generateRock();
-        }
+            for (var i = 0; i < ENEMIES_Y; i++) {
+                for (var j = 0; j < ENEMIES_X; j++) {
+                    this.generateEnemy({
+                        cx : x,
+                        cy : y
+                    });
+                    x+=distance;
+                }
+                x=distance/2;
+                y+=distance;
+            }
+
+
     },
-
-    _findNearestShip : function(posX, posY) {
+    _findNearestShip: function (posX, posY) {
         var closestShip = null,
             closestIndex = -1,
             closestSq = Number.POSITIVE_INFINITY;
@@ -65,12 +89,12 @@ var entityManager = {
             }
         }
         return {
-            theShip : closestShip,
+            theShip: closestShip,
             theIndex: closestIndex
         };
     },
 
-    _forEachOf: function(aCategory, fn) {
+    _forEachOf: function (aCategory, fn) {
         for (var i = 0; i < aCategory.length; ++i) {
             fn.call(aCategory[i]);
         }
@@ -81,66 +105,71 @@ var entityManager = {
 // A special return value, used by other objects,
 // to request the blessed release of death!
 //
-    KILL_ME_NOW : -1,
+    KILL_ME_NOW: -1,
 
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
 //
-    deferredSetup : function () {
-        this._categories = [this._rocks, this._bullets, this._ships];
+    deferredSetup: function () {
+        this._categories = [this._rocks, this._bullets, this._ships, this._enemies];
     },
 
-    init: function() {
-        this._generateRocks();
+    init: function () {
+        //this._generateRocks();
         //this._generateShip();
+        this._generateEnemiesBlock();
     },
 
-    fireBullet: function(cx, cy, velX, velY, rotation) {
+    fireBullet: function (cx, cy, velX, velY, rotation) {
         this._bullets.push(new Bullet({
-            cx   : cx,
-            cy   : cy,
-            velX : velX,
-            velY : velY,
+            cx: cx,
+            cy: cy,
+            velX: velX,
+            velY: velY,
 
-            rotation : rotation
+            rotation: rotation
         }));
     },
 
-    generateRock : function(descr) {
+    generateRock: function (descr) {
         this._rocks.push(new Rock(descr));
     },
 
-    generateShip : function(descr) {
+    generateShip: function (descr) {
         this._ships.push(new Ship(descr));
     },
 
-    killNearestShip : function(xPos, yPos) {
+    generateEnemy: function (descr) {
+        this._enemies.push(new Enemy(descr));
+    },
+
+    killNearestShip: function (xPos, yPos) {
         var theShip = this._findNearestShip(xPos, yPos).theShip;
         if (theShip) {
             theShip.kill();
         }
     },
 
-    yoinkNearestShip : function(xPos, yPos) {
+    yoinkNearestShip: function (xPos, yPos) {
         var theShip = this._findNearestShip(xPos, yPos).theShip;
         if (theShip) {
             theShip.setPos(xPos, yPos);
         }
     },
 
-    resetShips: function() {
+    resetShips: function () {
         this._forEachOf(this._ships, Ship.prototype.reset);
     },
 
-    haltShips: function() {
+    haltShips: function () {
         this._forEachOf(this._ships, Ship.prototype.halt);
     },
 
-    toggleRocks: function() {
+    toggleRocks: function () {
         this._bShowRocks = !this._bShowRocks;
     },
 
-    update: function(du) {
+    update: function (du) {
 
         for (var c = 0; c < this._categories.length; ++c) {
 
@@ -154,19 +183,17 @@ var entityManager = {
                 if (status === this.KILL_ME_NOW) {
                     // remove the dead guy, and shuffle the others down to
                     // prevent a confusing gap from appearing in the array
-                    aCategory.splice(i,1);
+                    aCategory.splice(i, 1);
                 }
                 else {
                     ++i;
                 }
             }
         }
-
-        if (this._rocks.length === 0) this._generateRocks();
-
+        if (this._enemies.length === 0) this._generateEnemiesBlock();
     },
 
-    render: function(ctx) {
+    render: function (ctx) {
 
         var debugX = 10, debugY = 100;
 
