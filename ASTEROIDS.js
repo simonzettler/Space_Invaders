@@ -50,7 +50,7 @@ function createInitialShips() {
 
     entityManager.generateShip({
         cx : 200,
-        cy : 200
+        cy : 200,
     });
     
 }

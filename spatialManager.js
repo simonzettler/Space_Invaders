@@ -55,21 +55,16 @@ var spatialManager = {
     },
 
     findEntityInRange: function(posX, posY, radius) {
-        for (var i = 0; i < this._entities.length; i++) {
-            var thisentity = this._entities[i];
-            if (thisentity) {
-                var pos = thisentity.getPos();
-
-                var distance = Math.sqrt(Math.pow(pos.posX - posX, 2) + Math.pow(pos.posY - posY, 2));
-
-                if (distance <= thisentity.getRadius()) {
-                    return thisentity;
-                }
-            }
+        for (var ID in this._entities) {
+            var e = this._entities[ID];
+            var distance = Math.sqrt(util.distSq(e.getPos().posX, e.getPos().posY, posX,posY));
+            var limit = e.getRadius() + radius;
+            if (distance < limit) return e;
         }
 
-        return null;
     },
+
+
 
     render: function(ctx) {
         var oldStyle = ctx.strokeStyle;

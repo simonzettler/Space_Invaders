@@ -47,13 +47,18 @@ Bullet.prototype.velY = 1;
 // Convert times from milliseconds to "nominal" time units.
 Bullet.prototype.lifeSpan = 3000 / NOMINAL_UPDATE_INTERVAL;
 
+Bullet.prototype.slowDown=false;
+
 Bullet.prototype.update = function (du) {
 
     // TODO: YOUR STUFF HERE! --- Unregister and check for death
     spatialManager.unregister(this);
 
     this.lifeSpan -= du;
+    this.slowDownFactor=1;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
+    if (this.slowDown)this.slowingDown(this.slowDownFactor);
+    if (Math.abs(this.velX) < 0.1&&Math.abs(this.velY) < 0.1) return entityManager.KILL_ME_NOW;
 
     this.cx += this.velX * du;
     this.cy += this.velY * du;
@@ -70,14 +75,35 @@ Bullet.prototype.update = function (du) {
     //
     var hitEntity = this.findHitEntity();
     if (hitEntity) {
-        var canTakeHit = hitEntity.takeBulletHit;
-        if (canTakeHit) canTakeHit.call(hitEntity); 
-        return entityManager.KILL_ME_NOW;
+        var canTakeHit = hitEntity.takeBulletHit(this);
+        if (canTakeHit) canTakeHit.call(hitEntity);
+        if(!(hitEntity instanceof Defense)){
+            return entityManager.KILL_ME_NOW;
+        }
+
     }
     
     // TODO: YOUR STUFF HERE! --- (Re-)Register
     spatialManager.register(this);
 
+};
+Bullet.prototype.getSpeed = function() {
+    return{
+        velX: this.velX,
+        velY: this.velY
+    };
+};
+
+Bullet.prototype.setSpeed = function (velX, velY) {
+    this.velX=velX;
+    this.velY=velY;
+};
+
+Bullet.prototype.slowingDown = function (factor) {
+    this.velX=this.velX/factor;
+    this.velY=this.velY/factor;
+    this.slowDown=true;
+    this.slowDownFactor=factor;
 };
 
 Bullet.prototype.getRadius = function () {

@@ -59,6 +59,10 @@ Entity.prototype.getRadius = function () {
     return 0;
 };
 
+Entity.prototype.takeBulletHit = function () {
+    this.warp();
+};
+
 Entity.prototype.getSpatialID = function () {
     return this._spatialID;
 };

@@ -24,6 +24,7 @@ function Ship(descr) {
     this.cy=g_canvas.height-this.sprite.height/2;
     this.reset_cx = this.cx;
     this.reset_cy = this.cy;
+    this.scale = 0.5;
 }
 
 Ship.prototype = new Entity();
@@ -102,11 +103,9 @@ Ship.prototype.maybeFireBullet = function () {
 Ship.prototype.getRadius = function () {
     return (this.sprite.width / 2) * 0.9;
 };
-/*
-Ship.prototype.takeEnemyHit = function () {
-    //TODO
+Ship.prototype.takeBulletHit = function () {
+
 };
-*/
 Ship.prototype.reset = function () {
     this.setPos(this.reset_cx, this.reset_cy);
     this.rotation = this.reset_rotation;

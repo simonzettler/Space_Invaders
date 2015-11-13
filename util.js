@@ -64,7 +64,9 @@ square: function(x) {
 distSq: function(x1, y1, x2, y2) {
     return this.square(x2-x1) + this.square(y2-y1);
 },
-
+dist: function(x1, y1, x2, y2) {
+    return Math.sqrt(this.distSq(x1, y1, x2, y2));
+},
 wrappedDistSq: function(x1, y1, x2, y2, xWrap, yWrap) {
     var dx = Math.abs(x2-x1),
 	dy = Math.abs(y2-y1);
@@ -92,6 +94,24 @@ strokeCircle: function (ctx, x, y, r) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.stroke();
+},
+strokeRect: function (ctx, x, y, w, h) {
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.stroke();
+},
+
+drawRect: function (ctx, x, y, w, h, fill, stroke) {
+    var oldFill = ctx.fillStyle;
+    var oldStroke = ctx.strokeStyle;
+    if(fill!==undefined)ctx.fillStyle = fill;
+    if(stroke!==undefined)ctx.strokeStyle = stroke;
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = oldFill;
+    ctx.strokeStyle = oldStroke;
 },
 
 fillCircle: function (ctx, x, y, r) {

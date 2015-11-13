@@ -31,6 +31,7 @@ var entityManager = {
     _bullets: [],
     _ships: [],
     _enemies: [],
+    _defensblocks: [],
 
     _bShowRocks: true,
 
@@ -45,6 +46,23 @@ var entityManager = {
      }
      },
      */
+    _generateDefenseblocks : function() {
+        var i,
+            NUM_BLOCKS = 4,
+            width=g_canvas.width/10,
+            height=30;
+
+        for (i = 0; i < NUM_BLOCKS; ++i) {
+            this.generateDefense({
+                cx:i*width*2+2*width,
+                cy:g_canvas.height-100,
+                width: width,
+                height: height
+            });
+        }
+    },
+
+
     _generateEnemiesBlock: function () {
         //Wall.prototype.width = g_canvas.width;
         //Wall.prototype.height = g_canvas.height/4;
@@ -111,13 +129,14 @@ var entityManager = {
 // i.e. thing which need `this` to be defined.
 //
     deferredSetup: function () {
-        this._categories = [this._rocks, this._bullets, this._ships, this._enemies];
+        this._categories = [this._rocks, this._bullets, this._ships, this._enemies, this._defensblocks];
     },
 
     init: function () {
         //this._generateRocks();
         //this._generateShip();
         this._generateEnemiesBlock();
+        this._generateDefenseblocks();
     },
 
     fireBullet: function (cx, cy, velX, velY, rotation) {
@@ -133,6 +152,10 @@ var entityManager = {
 
     generateRock: function (descr) {
         this._rocks.push(new Rock(descr));
+    },
+
+    generateDefense: function (descr) {
+        this._defensblocks.push(new Defense(descr));
     },
 
     generateShip: function (descr) {
